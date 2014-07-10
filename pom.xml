@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <packaging>jar</packaging>
+    <groupId>org.webjars</groupId>
+    <artifactId>jquery.cookiecuttr</artifactId>
+    <version>1.0</version>
+    <name>jquery.cookiecuttr</name>
+    <description>WebJar for jquery.cookiecuttr</description>
+    <url>http://webjars.org</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License</name>
+            <url>http://gnu.org/licenses/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://github.com/webjars/jquery.cookiecuttr</url>
+        <connection>scm:git:https://github.com/webjars/jquery.cookiecuttr.git</connection>
+        <developerConnection>scm:git:https://github.com/webjars/jquery.cookiecuttr.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>ptahchiev</id>
+            <name>Petar Tahchiev</name>
+            <email>petar@tahchiev.net</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <upstream.version>1.0</upstream.version>
+        <upstream.directory>cookiecuttr-${upstream.version}</upstream.directory>
+        <upstream.file>master.zip</upstream.file>
+        <upstream.url>https://github.com/weare2ndfloor/cookieCuttr/archive</upstream.url>
+        <destDir>${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${upstream.version}</destDir>
+    </properties>
+
+	<dependencies>
+		<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+		<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery-cookie</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+    </dependencies>
+	
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0-beta-4</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>${upstream.url}</url>
+                            <fromFile>${upstream.file}</fromFile>
+                            <toFile>${project.build.directory}/${project.artifactId}.zip</toFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals><goal>run</goal></goals>
+                        <configuration>
+                            <target>
+                                <echo message="unzip archive and file files" />
+                                <unzip src="${project.build.directory}/${project.artifactId}.zip" dest="${destDir}">
+                                    <patternset>
+										<exclude name="${upstream.directory}/demo/**" />
+										<exclude name="${upstream.directory}/spec/**" />
+                                        <exclude name="${upstream.directory}/README.md" />
+										<exclude name="${upstream.directory}/changelog.md" />
+										<exclude name="${upstream.directory}/index.html" />
+                                        <exclude name="${upstream.directory}/.gitignore" />
+                                    </patternset>
+                                    <mapper>
+                                        <!-- Strip leading directory off each path -->
+                                        <!-- So "xxx/docs/index.html" becomes "docs/index.html" -->
+                                        <cutdirsmapper dirs="1" />
+                                    </mapper>
+                                </unzip>
+                                <echo message="unzip done" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
