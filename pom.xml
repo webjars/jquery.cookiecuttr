@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
     <groupId>org.webjars</groupId>
     <artifactId>jquery.cookiecuttr</artifactId>
-    <version>4dc24d9628</version>
+    <version>4dc25d9628-SNAPSHOT</version>
     <name>jquery.cookiecuttr</name>
     <description>WebJar for jquery.cookiecuttr</description>
     <url>http://webjars.org</url>
@@ -28,7 +28,7 @@
         <url>http://github.com/webjars/jquery.cookiecuttr</url>
         <connection>scm:git:https://github.com/webjars/jquery.cookiecuttr.git</connection>
         <developerConnection>scm:git:https://github.com/webjars/jquery.cookiecuttr.git</developerConnection>
-        <tag>jquery.cookiecuttr-4dc24d9628</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
