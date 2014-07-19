@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
     <groupId>org.webjars</groupId>
     <artifactId>jquery.cookiecuttr</artifactId>
-    <version>1.0</version>
+    <version>4dc24d9628-SNAPSHOT</version>
     <name>jquery.cookiecuttr</name>
     <description>WebJar for jquery.cookiecuttr</description>
     <url>http://webjars.org</url>
@@ -41,11 +41,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <upstream.version>1.0</upstream.version>
-        <upstream.directory>cookiecuttr-${upstream.version}</upstream.directory>
-        <upstream.file>master.zip</upstream.file>
-        <upstream.url>https://github.com/weare2ndfloor/cookieCuttr/archive</upstream.url>
+        <upstream.version>4dc24d9628</upstream.version>
+        <upstream.commit>4dc24d962837c039f50efbf48505b44166989c39</upstream.commit>
+        <upstream.url>https://raw.githubusercontent.com/weare2ndfloor/cookieCuttr/${upstream.commit}</upstream.url>
         <destDir>${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${upstream.version}</destDir>
+        <requirejs>
+            {
+                "paths": { "jquery-cookiecuttr": "jquery.cookiecuttr" },
+                "shim": { "jquery-cookiecuttr": ["jquery-cookie"] }
+            }
+        </requirejs>
     </properties>
 
 	<dependencies>
@@ -69,45 +74,27 @@
                 <version>1.0-beta-4</version>
                 <executions>
                     <execution>
+                        <id>js</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>download-single</goal>
                         </goals>
                         <configuration>
                             <url>${upstream.url}</url>
-                            <fromFile>${upstream.file}</fromFile>
-                            <toFile>${project.build.directory}/${project.artifactId}.zip</toFile>
+                            <fromFile>jquery.cookiecuttr.js</fromFile>
+                            <toDir>${destDir}</toDir>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
                     <execution>
+                        <id>css</id>
                         <phase>process-resources</phase>
-                        <goals><goal>run</goal></goals>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
                         <configuration>
-                            <target>
-                                <echo message="unzip archive and file files" />
-                                <unzip src="${project.build.directory}/${project.artifactId}.zip" dest="${destDir}">
-                                    <patternset>
-										<exclude name="${upstream.directory}/demo/**" />
-										<exclude name="${upstream.directory}/spec/**" />
-                                        <exclude name="${upstream.directory}/README.md" />
-										<exclude name="${upstream.directory}/changelog.md" />
-										<exclude name="${upstream.directory}/index.html" />
-                                        <exclude name="${upstream.directory}/.gitignore" />
-                                    </patternset>
-                                    <mapper>
-                                        <!-- Strip leading directory off each path -->
-                                        <!-- So "xxx/docs/index.html" becomes "docs/index.html" -->
-                                        <cutdirsmapper dirs="1" />
-                                    </mapper>
-                                </unzip>
-                                <echo message="unzip done" />
-                            </target>
+                            <url>${upstream.url}</url>
+                            <fromFile>cookiecuttr.css</fromFile>
+                            <toDir>${destDir}</toDir>
                         </configuration>
                     </execution>
                 </executions>
@@ -115,7 +102,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.5.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>sonatype-nexus-staging</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
